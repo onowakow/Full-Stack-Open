@@ -1,5 +1,16 @@
 import React from 'react'
 
+const Header = (props) => {
+  return (
+    <>
+      <h1>{props.course}</h1>
+      <p>
+        {props.part1} {props.exercise1}
+      </p>
+    </>
+  )
+}
+
 const App = () => {
   const course = 'Half Stack application development'
   const part1 = 'Fundamentals of React'
@@ -11,10 +22,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>{course}</h1>
-      <p>
-        {part1} {exercises1}
-      </p>
+      <Header course = {course} part1 = {part1} exercise1 = {exercises1} />
       <p>
         {part2} {exercises2}
       </p>
