@@ -24,3 +24,8 @@ $ git commit -m "Here is a description of my commit." -m "Some description"
 $ git push
 
     --> Pushes commits to remote repository
+
+
+$ nvm use 16.13.0
+
+    --> Node habitually changes to v17 which gives me issues. I don't know why. This command seems to temporarily change the node version.
