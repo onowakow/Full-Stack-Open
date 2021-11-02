@@ -3,29 +3,35 @@ import React, { useState } from "react";
 const Button = (props) => {
   return <button onClick={props.onClick}>{props.text}</button>;
 };
-const Stat = ({ name, quantity }) => {
+
+const StatisticLine = ({ name, quantity }) => {
   return (
-    <div>
-      {name} {quantity}
-    </div>
-  );
-};
-const Statistics = ({good, neutral, bad}) => {
-  let total = (good + neutral + bad) 
-  let average = (good - bad)/3
-  let positive = good/total
-  return (
-    <div>
-      <Stat name="good" quantity={good} />
-      <Stat name="neutral" quantity={neutral} />
-      <Stat name="bad" quantity={bad} />
-      <Stat name="average" quantity={average} />
-      <Stat name="positive" quantity={positive} />
-    </div>
+    <tr>
+      <td>{name}</td>
+      <td>{quantity}</td>
+    </tr>
   );
 };
 
-
+const Statistics = ({ good, neutral, bad }) => {
+  let total = good + neutral + bad;
+  let average = (good - bad) / 3;
+  let positive = (good / total) * 100;
+  if (total) {
+    return (
+      <table>
+        <tbody>
+          <StatisticLine name="good" quantity={good} />
+          <StatisticLine name="neutral" quantity={neutral} />
+          <StatisticLine name="bad" quantity={bad} />
+          <StatisticLine name="average" quantity={average} />
+          <StatisticLine name="positive" quantity={positive + " %"} />
+        </tbody>
+      </table>
+    );
+  }
+  return <div>No feedback given</div>;
+};
 
 const App = () => {
   const [good, setGood] = useState(0);
