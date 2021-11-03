@@ -27,7 +27,6 @@ const App = () => {
   ]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ newQuery, setNewQuery ] = useState('')
   const [ filteredPersons, setFilter ] = useState(persons)
   
   // Handler functions
@@ -59,25 +58,24 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
-  const handleNewQuery = (event) => {
-    setNewQuery(event.target.value)
+  const handleQuery = (event) => {
+    const newPersons = persons.filter(person => (
+      person
+      .name
+      .toLowerCase()
+      .includes(event.target.value.toLowerCase())
+    ))
+    setFilter(newPersons)
   }
 
-  const searchPersons = (event) => {
-    // Implement search mechanism
-    setFilter(persons)
-  }
 
   return (
     <div>
       <h2>Phonebook</h2>
       <h3>Filter shown with</h3>
-      <form onSubmit={searchPersons}>
+      <form>
         <div>
-          query: <input value={newQuery} onChange={handleNewQuery} />
-        </div>
-        <div>
-          <button type="submit">search</button>
+          query: <input onChange={handleQuery} />
         </div>
       </form>
       <h3>Add new</h3>
