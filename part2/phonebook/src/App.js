@@ -19,12 +19,12 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     setPersons(persons.concat({name: newName}))
+    setNewName('')
   }
 
   const handleNameChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
-
   }
 
   return (
