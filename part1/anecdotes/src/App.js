@@ -10,6 +10,44 @@ const Button = (props) => {
   return <button onClick={props.onClick}>{props.text}</button>
 }
 
+const VoteCount = (props) => {
+  if (props.amount === 1) {
+    return <div>has {props.amount} vote</div>
+  }
+  else if (props.amount) {
+    return <div>has {props.amount} votes</div>
+  }
+  // else
+  return <div>has 0 votes</div>
+}
+
+const Win = ({votes, anecdotes}) => {
+  // Win gets Votes object as props
+
+  let winnerIndex = -1
+  let winnerVotes = 0
+
+  for (const prop in votes) {
+    if (votes[prop] > winnerVotes) {
+      winnerVotes = votes[prop]
+      winnerIndex = prop
+    }
+  }
+
+  if (winnerIndex === -1) {
+    return <div>No votes</div>
+  }
+  else {
+    return(
+      <div>
+        <div>{anecdotes[winnerIndex]}</div>
+        <div>has {winnerVotes} votes</div>
+      </div>
+    )
+  }
+
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -21,11 +59,10 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients'
   ]
    
-  
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState({})
- 
 
+ 
   const randomSelection = (array) => {
     let length = array.length;
     let randomIndex = Math.floor(Math.random()*length)
@@ -34,11 +71,13 @@ const App = () => {
 
   const voteIncrementAndSet = (index) => {
     let newVotes = {...votes}
+    
     // if there is an existing vote count, increment the number of votes.
     if (newVotes[index]) {
       newVotes[index] += 1
       setVotes(newVotes)
     }
+
     // This may not need to be if/else
     else {
       newVotes[index] = 1
@@ -47,16 +86,19 @@ const App = () => {
   }
 
   const handleNextAnecdote = () => () => setSelected(randomSelection(anecdotes))
-  const handleVote = () => () => voteIncrementAndSet()
-  
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
+      <VoteCount amount={votes[selected]} />
       <div>
         <Button text="next anecdote" onClick={handleNextAnecdote()} />
         <Button text="vote" onClick={() => voteIncrementAndSet(selected)} /> 
       </div>
+      {console.log(votes)}
+      <h1>Anecdote with most votes</h1>
+      <Win votes={votes} anecdotes={anecdotes} />
     </div>
   )
 }
