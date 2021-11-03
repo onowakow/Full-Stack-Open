@@ -7,6 +7,15 @@ const Person = ({name}) => {
   )
 }
 
+const People = ({persons}) => {
+  
+  return (
+    persons.map(( person ) => (
+      <Person key={person.name} name={person.name}/>
+    ))
+  )
+}
+
 const App = () => {
 
   // State declarations
@@ -16,7 +25,12 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   
   // Handler functions
+
   const addPerson = (event) => {
+    if (persons.indexOf({name: newName}) === -1) {
+      // Is this the best place for this alert function? Should it be in another component?
+      return alert("Name already taken. Please select a different name.")
+    }
     event.preventDefault()
     setPersons(persons.concat({name: newName}))
     setNewName('')
@@ -39,10 +53,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {/* Key is set to index. Not a good practice, but I lack guidance on better alternatives. */}
-      {persons.map( (person, i) => (
-        <Person key={i} name={person.name}/>
-      ))}
+      <People persons={persons} />
     </div>
   )
 }
