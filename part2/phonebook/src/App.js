@@ -16,6 +16,22 @@ const People = ({persons}) => {
   )
 }
 
+const PersonForm = (props) => {
+  return (
+    <form onSubmit={props.addPerson}>
+      <div>
+        name: <input value={props.newName} onChange={props.handleNameChange}/>
+      </div>
+      <div>
+        number: <input value={props.newNumber} onChange={props.handleNumberChange}/>
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+}
+
 const App = () => {
 
   // State declarations
@@ -48,6 +64,17 @@ const App = () => {
 
     setNewNumber('')
     setNewName('')
+
+    /* Update filter function is necessary to get around batched state updates.
+       Simply calling setFilter doesn't necessarily update the filter with the 
+       latest information.
+       
+       I could have avoided this issue by always showing people. If the query
+       is truthy, the display then shows a filtered list. This way, it's not
+       necessary to update persons in this convoluted fashion*/
+       
+    const updateFilter = array => setFilter(array)
+    updateFilter(persons)
   }
 
   const handleNameChange = (event) => {
@@ -68,7 +95,6 @@ const App = () => {
     setFilter(newPersons)
   }
 
-
   return (
     <div>
       <h2>Phonebook</h2>
@@ -79,17 +105,14 @@ const App = () => {
         </div>
       </form>
       <h3>Add new</h3>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange}/>
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange}/>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm 
+        addPerson={addPerson} 
+        newName={newName} 
+        newNumber={newNumber} 
+        handleNumberChange={handleNumberChange}
+        handleNameChange={handleNameChange}
+      />
+      
       <h3>Numbers</h3>
       <People persons={filteredPersons} />
     </div>
