@@ -27,11 +27,16 @@ const App = () => {
   // Handler functions
 
   const addPerson = (event) => {
-    if (persons.indexOf({name: newName}) === -1) {
-      // Is this the best place for this alert function? Should it be in another component?
-      return alert("Name already taken. Please select a different name.")
-    }
     event.preventDefault()
+
+    // Check if name exists
+    const names = persons.map(person => person.name)
+    console.log(names)
+    if (names.indexOf(newName) !== -1) {
+      // Is this the best place for this alert function? Should it be in another component?
+      return alert(`${newName} already taken. Please select a different name.`)
+    }
+
     setPersons(persons.concat({name: newName}))
     setNewName('')
   }
