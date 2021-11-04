@@ -1,36 +1,9 @@
 import React, { useState } from 'react'
+import People from './components/People'
+import PersonForm from './components/PersonForm'
+import Search from './components/Search'
 
-// Components
-const Person = ({person}) => {
-  return (
-    <p>{person.name} {person.number}</p>
-  )
-}
 
-const People = ({persons}) => {
-  
-  return (
-    persons.map(( person ) => (
-      <Person key={person.name} person={person}/>
-    ))
-  )
-}
-
-const PersonForm = (props) => {
-  return (
-    <form onSubmit={props.addPerson}>
-      <div>
-        name: <input value={props.newName} onChange={props.handleNameChange}/>
-      </div>
-      <div>
-        number: <input value={props.newNumber} onChange={props.handleNumberChange}/>
-      </div>
-      <div>
-        <button type="submit">add</button>
-      </div>
-    </form>
-  )
-}
 
 const App = () => {
 
@@ -43,7 +16,7 @@ const App = () => {
   ]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ filteredPersons, setFilter ] = useState(persons)
+  const [ query, setQuery ] = useState('')
   
   // Handler functions
 
@@ -57,6 +30,7 @@ const App = () => {
       return alert(`${newName} is already added to the phonebook. Please select a different name.`)
     }
 
+    
     setPersons(persons.concat({
       name: newName,
       number: newNumber,
@@ -65,16 +39,6 @@ const App = () => {
     setNewNumber('')
     setNewName('')
 
-    /* Update filter function is necessary to get around batched state updates.
-       Simply calling setFilter doesn't necessarily update the filter with the 
-       latest information.
-       
-       I could have avoided this issue by always showing people. If the query
-       is truthy, the display then shows a filtered list. This way, it's not
-       necessary to update persons in this convoluted fashion*/
-       
-    const updateFilter = array => setFilter(array)
-    updateFilter(persons)
   }
 
   const handleNameChange = (event) => {
@@ -86,24 +50,14 @@ const App = () => {
   }
 
   const handleQuery = (event) => {
-    const newPersons = persons.filter(person => (
-      person
-      .name
-      .toLowerCase()
-      .includes(event.target.value.toLowerCase())
-    ))
-    setFilter(newPersons)
+    setQuery(event.target.value)
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
       <h3>Filter shown with</h3>
-      <form>
-        <div>
-          query: <input onChange={handleQuery} />
-        </div>
-      </form>
+      <Search handleQuery={handleQuery} />
       <h3>Add new</h3>
       <PersonForm 
         addPerson={addPerson} 
@@ -112,9 +66,8 @@ const App = () => {
         handleNumberChange={handleNumberChange}
         handleNameChange={handleNameChange}
       />
-      
       <h3>Numbers</h3>
-      <People persons={filteredPersons} />
+      <People persons={persons} query={query} />
     </div>
   )
 }
