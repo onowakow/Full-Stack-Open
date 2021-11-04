@@ -15,6 +15,15 @@ const App = () => {
   const [ query, setQuery ] = useState('')
 
   //Effect Hook
+  /* Note on how effect hook works. Upon rendering App, useEffect is executed. 
+  axios.get initiates the fetch request and saves the then method as an event handler
+  After the data arrives from the get method, the event handler is called. This sets
+  the persons state hook to the data of the response. 
+  
+  Note that useEffect accepts two arguments, the second of which I left blank.
+  The second argument regards when useEffect is called. By leaving it as an empty 
+  array, useEffect will fire when the App component first renders. */
+  
   useEffect(() => {
     axios
       .get('http://localhost:3001/persons')
