@@ -5,7 +5,7 @@ const CountriesList = ({ filteredCountries, onClick }) => {
   return filteredCountries.map((country) => (
     <div key={country.population}>
       {country.name.common} 
-      <button onClick={onClick} value={country}>Show</button>
+      <button onClick={onClick}>Show</button>
     </div>
   ));
 };
@@ -26,18 +26,6 @@ const CountrySingleView = ({ country }) => {
 };
 
 const Countries = ({ filteredCountries }) => {
-  const [isSingleView, setSingleView] = useState(false)
-  const [country, setCountry] = useState({})
-
-  const handleShowClick = (event) => {
-    setCountry(event.target.value)
-    setSingleView(true)
-  }
-
-  if (isSingleView) {
-    return <CountrySingleView country={country} />
-  }
-
   if (filteredCountries.length > 10) {
     return <div>Too many results. Narrow search.</div>;
   }
@@ -48,7 +36,7 @@ const Countries = ({ filteredCountries }) => {
   }
 
   // List countries (countries > 10)
-  return <CountriesList onClick={handleShowClick} filteredCountries={filteredCountries} />;
+  return <CountriesList filteredCountries={filteredCountries} />;
 };
 
 const Languages = ({ languages }) => {
