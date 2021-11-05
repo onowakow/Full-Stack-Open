@@ -6,7 +6,19 @@ const Countries = ({ filteredCountries }) => {
     return <div>Too many results. Narrow search.</div>
   }
 
-  // Populations seem to be random enough for a key, given the scope of this application
+  // Single country display
+  else if (filteredCountries.length === 1) {
+    // Set single country var
+    const country = filteredCountries[0]
+    console.log(country)
+    return (
+      <div>
+        <h2>{country.name.common}</h2>
+      </div>
+    )
+  }
+
+  // List countries (countries > 10)
   return (
     filteredCountries.map(country => (
       <div key={country.population}>
