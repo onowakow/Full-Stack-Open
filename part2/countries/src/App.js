@@ -1,23 +1,18 @@
 import React, {useState, useEffect} from "react";
 import axios from 'axios';
 
-const Countries = ({filteredCountries}) => {
-  /* React will render this component before the data is recieved from the API.
-    This is an issue because filteredCountries will be null, and calling .length on 
-    a null object makes JavaScript sad.
-
-    My solution is to first simply check if filteredCountries is null or not. 
-    I'm unsure if there is a better solution (I am guessing there is one.)
-  */
-  if (filteredCountries) {
-    console.log(filteredCountries.length)
+const Countries = ({ filteredCountries }) => {
+  if (filteredCountries.length > 10) {
+    return <div>Too many results. Narrow search.</div>
   }
-  
-  
+
+  // Populations seem to be random enough for a key, given the scope of this application
   return (
-    <div>
-      placeholder text uwu
-    </div>
+    filteredCountries.map(country => (
+      <div key={country.population}>
+        {country.name.common}
+      </div>
+    ))
   )
 }
 
@@ -45,16 +40,14 @@ const App = () => {
 
     setFilteredCountries(filtered)
   }
-
-  console.log(filteredCountries)
-
+  
   return (
     <div>
       <h1>Data for countries</h1>
       <form>
         <input onChange={handleQuery} />
       </form>
-      <Countries countries={filteredCountries}/>
+      <Countries filteredCountries={filteredCountries}/>
     </div>
   );
 }
