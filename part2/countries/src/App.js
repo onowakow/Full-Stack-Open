@@ -10,10 +10,16 @@ const Countries = ({ filteredCountries }) => {
   else if (filteredCountries.length === 1) {
     // Set single country var
     const country = filteredCountries[0]
-    console.log(country)
     return (
       <div>
         <h2>{country.name.common}</h2>
+        <p>capital: {country.capital}</p>
+        <p>population: {country.population}</p>
+        <h3>languages</h3>
+        <ul>
+          <Languages languages={country.languages} />
+        </ul>
+        <div>flag here</div>
       </div>
     )
   }
@@ -24,6 +30,18 @@ const Countries = ({ filteredCountries }) => {
       <div key={country.population}>
         {country.name.common}
       </div>
+    ))
+  )
+}
+
+const Languages = ({languages}) => {
+  const languageArray = []
+  for (var key in languages) {
+    languageArray.push(languages[key])
+  }
+  return (
+    languageArray.map((language, i) => (
+      <li key={i}>{language}</li>
     ))
   )
 }
