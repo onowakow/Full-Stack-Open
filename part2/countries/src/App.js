@@ -20,12 +20,13 @@ const CountrySingleView = ({ country }) => {
       <ul>
         <Languages languages={country.languages} />
       </ul>
-      <div>{country.flag}</div>
+      <img src={country.flags.png} alt="flag"/>
     </div>
   );
 };
 
 const Countries = ({ filteredCountries }) => {
+  /* Here: a state for single view (boolean) */
   if (filteredCountries.length > 10) {
     return <div>Too many results. Narrow search.</div>;
   }
@@ -36,7 +37,8 @@ const Countries = ({ filteredCountries }) => {
   }
 
   // List countries (countries > 10)
-  return <CountriesList filteredCountries={filteredCountries} />;
+    /* Here: an onClick call which toggles the single view state. Function implemented above */
+    return <CountriesList filteredCountries={filteredCountries} />;
 };
 
 const Languages = ({ languages }) => {
