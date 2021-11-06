@@ -1,11 +1,25 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const CountriesList = ({ filteredCountries, onClick }) => {
-  console.log(filteredCountries)
+/* Countries component exists in one of 3 states. Countries either displays a 
+  "too many results" warning, CountriesList, or SingleCountryView. 
+  
+  Two different imputs can change these states. First, the length of the
+  filtered array: If the array is < 10, a list is shown. If > 10, the warning
+  is shown. Finally, if only one country is in the query, the SingleCountryView
+  is shown. 
+  
+  The second input are the "show" buttons, which are rendered alongside the
+  countries in the country list. This 'show' button should trigger the SCV.
+  
+  Making a new search query should reset any previous action by the show button
+  */
+
+const CountriesList = ({ filteredCountries }) => {
+  console.log(filteredCountries);
   return filteredCountries.map((country) => (
     <div key={country.population}>
-      {country.name.common} 
+      {country.name.common}
       <button>Show</button>
     </div>
   ));
@@ -21,13 +35,12 @@ const CountrySingleView = ({ country }) => {
       <ul>
         <Languages languages={country.languages} />
       </ul>
-      <img src={country.flags.png} alt="flag"/>
+      <img src={country.flags.png} alt="flag" />
     </div>
   );
 };
 
 const Countries = ({ filteredCountries }) => {
-
   if (filteredCountries.length > 10) {
     return <div>Too many results. Narrow search.</div>;
   }
@@ -38,7 +51,6 @@ const Countries = ({ filteredCountries }) => {
   }
 
   // List countries (countries > 10)
-  /* Here: an onClick call which toggles the single view state. Function implemented above */
   return <CountriesList filteredCountries={filteredCountries} />;
 };
 
@@ -53,6 +65,7 @@ const Languages = ({ languages }) => {
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [filteredCountries, setFilteredCountries] = useState([]);
+  /*countryView state. 0, 1, or 2. 0 is too wide, 1 is single view, 2 is a list */
 
   useEffect(() => {
     axios.get("https://restcountries.com/v3.1/all").then((response) => {
@@ -79,6 +92,7 @@ const App = () => {
       <form>
         <input onChange={handleQuery} />
       </form>
+      {/* pass countryView here */}
       <Countries filteredCountries={filteredCountries} />
     </div>
   );
