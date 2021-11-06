@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const CountriesList = ({ filteredCountries, onClick }) => {
+  console.log(filteredCountries)
   return filteredCountries.map((country) => (
     <div key={country.population}>
       {country.name.common} 
-      <button onClick={onClick}>Show</button>
+      <button>Show</button>
     </div>
   ));
 };
@@ -26,7 +27,7 @@ const CountrySingleView = ({ country }) => {
 };
 
 const Countries = ({ filteredCountries }) => {
-  /* Here: a state for single view (boolean) */
+
   if (filteredCountries.length > 10) {
     return <div>Too many results. Narrow search.</div>;
   }
@@ -37,8 +38,8 @@ const Countries = ({ filteredCountries }) => {
   }
 
   // List countries (countries > 10)
-    /* Here: an onClick call which toggles the single view state. Function implemented above */
-    return <CountriesList filteredCountries={filteredCountries} />;
+  /* Here: an onClick call which toggles the single view state. Function implemented above */
+  return <CountriesList filteredCountries={filteredCountries} />;
 };
 
 const Languages = ({ languages }) => {
