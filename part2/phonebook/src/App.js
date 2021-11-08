@@ -1,10 +1,8 @@
-import axios from 'axios'
 import Search from './components/Search'
 import People from './components/People'
 import PersonForm from './components/PersonForm'
 import React, { useState, useEffect } from 'react'
-
-
+import personService from './services/persons'
 
 const App = () => {
 
@@ -14,21 +12,11 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ query, setQuery ] = useState('')
 
-  //Effect Hook
-  /* Note on how effect hook works. Upon rendering App, useEffect is executed. 
-  axios.get initiates the fetch request and saves the then method as an event handler
-  After the data arrives from the get method, the event handler is called. This sets
-  the persons state hook to the data of the response. 
-  
-  Note that useEffect accepts two arguments, the second of which I left blank.
-  The second argument regards when useEffect is called. By leaving it as an empty 
-  array, useEffect will fire when the App component first renders. */
-  
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    personService
+      .getAll()
       .then(response => {
-        setPersons(response.data)
+        setPersons(response)
       })
   }, [])
   
@@ -37,6 +25,11 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
 
+    const newPerson = {
+      name: newName,
+      number: newNumber
+    }
+
     // Check if name exists
     const names = persons.map(person => person.name)
     if (names.indexOf(newName) !== -1) {
@@ -44,15 +37,13 @@ const App = () => {
       return alert(`${newName} is already added to the phonebook. Please select a different name.`)
     }
 
-    
-    setPersons(persons.concat({
-      name: newName,
-      number: newNumber,
-    }))
-
-    setNewNumber('')
-    setNewName('')
-
+    personService
+      .create(newPerson)
+      .then(response => {
+        setPersons(persons.concat(response))
+        setNewNumber('')
+        setNewName('')
+      })
   }
 
   const handleNameChange = (event) => {
@@ -65,6 +56,21 @@ const App = () => {
 
   const handleQuery = (event) => {
     setQuery(event.target.value)
+  }
+
+  const handleDelete = (event) => {
+    // value is a string. Must be parsed for strict equality.
+    const id = parseInt(event.target.value)
+    const name = persons.find(person => person.id === id).name
+    const isConfirmDelete = window.confirm(`Are you sure you want to delete ${name}?`)
+    if (isConfirmDelete) {
+      personService
+        .remove(id)
+        .then(response => 
+          setPersons(persons
+            .filter(person => person.id !== id))
+        )
+    }
   }
 
   return (
@@ -81,7 +87,7 @@ const App = () => {
         handleNameChange={handleNameChange}
       />
       <h3>Numbers</h3>
-      <People persons={persons} query={query} />
+      <People handleDelete={handleDelete} persons={persons} query={query} />
     </div>
   )
 }
