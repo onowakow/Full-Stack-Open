@@ -34,7 +34,27 @@ const App = () => {
     const names = persons.map(person => person.name)
     if (names.indexOf(newName) !== -1) {
       // Is this the best place for this alert function? Should it be in another component?
-      return alert(`${newName} is already added to the phonebook. Please select a different name.`)
+      const isUpdate = window.confirm(`${newName} is already added to the phonebook. Replace old number with new one?`)
+
+      // Find person's id
+      const id = persons.find(person => person.name === newName).id
+      console.log(id);
+
+      // Update person at that id
+      if (isUpdate) {
+        personService
+          .update(id, newPerson)
+          .then(response => (
+            // Replace old person data with updated data
+            setPersons(persons
+              .map(person => {
+                return person.id !== id ? person
+                : newPerson
+              })
+          )))
+      }
+      // Stop executing parent (addPerson) function.
+      return;
     }
 
     personService
@@ -66,9 +86,8 @@ const App = () => {
     if (isConfirmDelete) {
       personService
         .remove(id)
-        .then(response => 
-          setPersons(persons
-            .filter(person => person.id !== id))
+        .then(setPersons(persons
+          .filter(person => person.id !== id))
         )
     }
   }

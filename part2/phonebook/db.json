@@ -16,14 +16,9 @@
       "id": 4
     },
     {
-      "name": "Hello",
+      "name": "Test",
       "number": "123",
-      "id": 5
-    },
-    {
-      "name": "I love you!",
-      "number": "888",
-      "id": 7
+      "id": 6
     }
   ]
 }
