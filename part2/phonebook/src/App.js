@@ -1,8 +1,10 @@
-import Search from './components/Search'
 import People from './components/People'
+import Search from './components/Search'
+import personService from './services/persons'
 import PersonForm from './components/PersonForm'
 import React, { useState, useEffect } from 'react'
-import personService from './services/persons'
+import Notification from './components/Notification'
+import ErrorNotification from './components/ErrorNotification'
 
 const App = () => {
 
@@ -11,6 +13,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ query, setQuery ] = useState('')
+  const [ message, setMessage ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
   useEffect(() => {
     personService
@@ -44,25 +48,41 @@ const App = () => {
       if (isUpdate) {
         personService
           .update(id, newPerson)
-          .then(response => (
+          .then(response => {
             // Replace old person data with updated data
             setPersons(persons
               .map(person => {
                 return person.id !== id ? person
                 : newPerson
               })
-          )))
+            )
+            setMessage(`${newPerson.name} updated.`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
+          })
+          .catch(error => {
+            setErrorMessage(`Person ${newPerson.name} was already deleted.`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          })
       }
       // Stop executing parent (addPerson) function.
       return;
     }
 
+    // Create new person.
     personService
       .create(newPerson)
       .then(response => {
         setPersons(persons.concat(response))
         setNewNumber('')
         setNewName('')
+        setMessage(`${newPerson.name} added to phonebook`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
   }
 
@@ -86,15 +106,26 @@ const App = () => {
     if (isConfirmDelete) {
       personService
         .remove(id)
-        .then(setPersons(persons
-          .filter(person => person.id !== id))
-        )
+        .then( response => {
+          setPersons(persons
+            .filter(person => person.id !== id))
+          setMessage(`Person ${name} deleted`)
+          setTimeout(() => setMessage(null), 5000)
+        })
+        .catch(error => {
+          setErrorMessage(`Person ${name} was already deleted.`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <ErrorNotification message={errorMessage} />
+      <Notification message={message} />
       <h3>Filter shown with</h3>
       <Search handleQuery={handleQuery} />
       <h3>Add new</h3>
